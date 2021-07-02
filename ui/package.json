@@ -1,0 +1,28 @@
+{
+  "name": "octopus-sensing-visualizer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "build": "webpack --config webpack.dev.js && cp src/index.html src/index.css ../server/octopus_sensing_visualizer/ui_build",
+    "build-prod": "webpack --config webpack.prod.js && cp src/index.html src/index.css ../server/octopus_sensing_visualizer/ui_build"
+  },
+  "author": "Nastaran Saffaryazdi",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "chart.js": "^3.4.0"
+  },
+  "devDependencies": {
+    "@types/chart.js": "^2.9.32",
+    "@typescript-eslint/eslint-plugin": "^4.28.0",
+    "@typescript-eslint/parser": "^4.28.0",
+    "eslint": "^7.29.0",
+    "eslint-config-prettier": "^8.3.0",
+    "prettier": "^2.3.2",
+    "ts-loader": "^9.2.3",
+    "typescript": "^4.3.4",
+    "webpack": "^5.40.0",
+    "webpack-cli": "^4.7.2",
+    "webpack-merge": "^5.8.0"
+  }
+}
