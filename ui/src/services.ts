@@ -42,7 +42,7 @@ export async function fetchGraphs(window_size: number, start_time: number): Prom
     return response.json()
 }
 
-export async function fetchDataLength(): Promise<ServerData> {
+export async function fetchDataLength(): Promise<number> {
 
     const response = await fetch('http://' + window.location.host + '/api/get_data_length')
 
@@ -53,7 +53,7 @@ export async function fetchDataLength(): Promise<ServerData> {
     return response.json()
 }
 
-export async function fetchEnabledGraphs(): Promise<ServerData> {
+export async function fetchEnabledGraphs(): Promise<Array<string>> {
 
     const response = await fetch('http://' + window.location.host + '/api/get_enabled_graphs')
 

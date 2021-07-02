@@ -18,9 +18,14 @@
     flex-direction: column;
 }
 
-#controller-container{
+#controller-container {
     display: flex;
     flex-direction: row;
+}
+#slider-container {
+    display: flex;
+    flex-direction: row;
+    width: 80vw;
 }
 
 #data-container{
@@ -38,16 +43,16 @@
     flex-direction: column;
 }
 
-.eeg-chart {
-    height: 10vh;
+.eeg-chart
+.gsr-chart,
+.ppg-chart {
+    height: 15vh;
     width: 80vw;
     position: relative;
 }
 
-.gsr-chart,
-.ppg-chart {
-    height: 15vh;
-    width: 20vw;
+#slider{
+    width: 80vw;
     position: relative;
 }
 

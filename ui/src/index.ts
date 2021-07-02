@@ -37,16 +37,13 @@ function makeCanvas(id: string, htmlClass: string): string {
 
 export async function onSliderChange(sliderAmount: string) {
     // TODO: Draw messages in place of the chart when no data was available.
-    const window_size = 3
+    const window_size = 5
     const start_time = Number.parseInt(sliderAmount)
 
     const data = await fetchGraphs(window_size, start_time)
-    console.dir(charts)
     if (charts.eeg != null){
-        console.log("Inside EEG")
         if (data.eeg) {
             const eegData = data.eeg
-            console.log("Inside EEG data")
             charts.eeg.forEach((chart: Chart, idx: number) => {
                 if (eegData.length > idx) {
                     updateChart(chart, eegData[idx])
@@ -73,14 +70,15 @@ export async function onSliderChange(sliderAmount: string) {
 
 }
 
-async function makeController(){
+async function initSlider(){
     try {
         const dataLength = await fetchDataLength()
-        return `<div id="slider-container">
-        <input id="slider" type="range"
-        min=0 max=${dataLength} step=1 value=0
-        onchange="window.OctopusSensingVisualiser.onSliderChange(this.value)" />
-        </div>`
+        const slider = document.getElementById("slider") as HTMLInputElement
+        slider.value = "0"
+        slider.min = "0"
+        slider.max = dataLength.toString()
+        slider.step = "1"
+        slider.onchange = () => onSliderChange(slider.value)
 
     } catch (error) {
     // TODO: Show a notification or something
@@ -95,12 +93,7 @@ function changeSliderValue()
     sliderAmount += 1
     slider.value = sliderAmount.toString()
     onSliderChange(slider.value)
-}
-
-function getSlider()
-{
-    const slider = document.getElementById("slider") as HTMLInputElement
-    return slider
+    console.log(slider.value)
 }
 
 function makeChart(id: string, color: string): Chart {
@@ -138,7 +131,6 @@ function makeChart(id: string, color: string): Chart {
 
 
 function updateChart(chart: Chart, data: number[]) {
-    console.log("Update")
     if (!chart.data.datasets) {
         throw new Error("in updateChart: 'chart.data.datasets' is undefined! Should never happen!")
     }
@@ -155,38 +147,49 @@ function updateChart(chart: Chart, data: number[]) {
     chart.update('none')
 }
 
-
-async function getEnabledGraphs() {
-    try {
-        const enabledGraphs = await fetchEnabledGraphs()
-        return enabledGraphs
-
-    } catch (error) {
-    // TODO: Show a notification or something
-    console.error(error)
+function createCharts(enabledGraphs: Array<string>){
+    if (enabledGraphs.some(x=> x=="gsr")){
+        const gsr_chart = makeChart('gsr', '#44d7a3')
+        charts.gsr = gsr_chart
     }
+
+    if (enabledGraphs.some(x=> x=="ppg")){
+        const ppg_chart = makeChart('ppg', '#d74493')
+        charts.ppg = ppg_chart
+    }
+
+    if (enabledGraphs.some(x=> x=="eeg")){
+        const eeg_charts = Array(16)
+        for (let idx = 0; idx < 16; idx++) {
+            const id = 'eeg-' + idx
+            eeg_charts[idx] = makeChart(id, '#44a3d7')
+        }
+        charts.eeg = eeg_charts
+    }
+
+    
 }
 
-async function main() {
-    let pageHtml = '<div id="root-container">'
-    pageHtml += '<div id="controller-container">'
-    pageHtml += await makeController()
-    pageHtml += '</div>'
-    pageHtml += '<div id="data-container">'
-    pageHtml += '<div id="signal-container">'
-    pageHtml += '<div class="title">EEG</div>'
+async function makeHtml(enabledGraphs: Array<string>): Promise<string>{
+    let pageHtml = '<div id="signal-container">'
 
     // TODO: Fix hard-coded 16, and add other charts
-    for (let idx = 0; idx < 16; idx++) {
-        const id = 'eeg-' + idx
-        pageHtml += makeCanvas(id, 'eeg-chart')
+    if (enabledGraphs.some(x=> x=="gsr")){
+        pageHtml += '<div class="title">GSR</div>'
+        pageHtml += makeCanvas('gsr', 'gsr-chart')
     }
 
-    pageHtml += '<div class="title">GSR</div>'
-    pageHtml += makeCanvas('gsr', 'gsr-chart')
-
-    pageHtml += '<div class="title">PPG</div>'
-    pageHtml += makeCanvas('ppg', 'ppg-chart')
+    if (enabledGraphs.some(x=> x=="ppg")){
+        pageHtml += '<div class="title">PPG</div>'
+        pageHtml += makeCanvas('ppg', 'ppg-chart')
+    }
+    if (enabledGraphs.some(x=> x=="eeg")){
+        pageHtml += '<div class="title">EEG</div>'
+        for (let idx = 0; idx < 16; idx++) {
+            const id = 'eeg-' + idx
+            pageHtml += makeCanvas(id, 'eeg-chart')
+        }
+    }
 
     pageHtml += '</div>'
 
@@ -196,28 +199,23 @@ async function main() {
 
     pageHtml += '</div>'
 
-    pageHtml += '</div>'
 
-    pageHtml += '</div>'
+    return pageHtml
+}
 
-    const rootElement = document.getElementById('root')
-    if (!rootElement) {
-        throw new Error('Root element is null!')
+async function main() {
+    const enabledGraphs = await fetchEnabledGraphs()
+    const pageHtml = await makeHtml(enabledGraphs)
+    
+    const dataElement = document.getElementById('data-container')
+    if (!dataElement) {
+        throw new Error('Data element is null!')
     }
-    rootElement.innerHTML = pageHtml
 
-    const gsr_chart = makeChart('gsr', '#44d7a3')
-    const ppg_chart = makeChart('ppg', '#d74493')
+    dataElement.innerHTML = pageHtml
+    createCharts(enabledGraphs)
+    initSlider()
 
-    const eeg_charts = Array(16)
-    for (let idx = 0; idx < 16; idx++) {
-        const id = 'eeg-' + idx
-        eeg_charts[idx] = makeChart(id, '#44a3d7')
-    }
-    charts.eeg = eeg_charts
-    charts.gsr = gsr_chart
-    charts.ppg = ppg_chart
-    console.log("Before interval")
     setInterval(changeSliderValue, 1000)
 
 }

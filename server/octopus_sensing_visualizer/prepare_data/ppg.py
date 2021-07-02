@@ -70,7 +70,6 @@ def prepare_ppg_components(ppg_data: np.array, sampling_rate: int,
                                    sample_rate=sampling_rate,
                                    segment_width=window_size,
                                    segment_overlap=overlap/window_size)
-    print(m)
 
     signal_length = (data.shape[0] / sampling_rate)
     hr = np.zeros(int(signal_length))

@@ -124,7 +124,7 @@ class EndPoint():
         self.data_length = (samples/ppg_sampling_rate)
         if config.getboolean('PPG', 'display_signal') is True:
             self.data["ppg"] = ppg_data
-            self.sampling_rate["ppg"] = 1
+            self.sampling_rate["ppg"] = ppg_sampling_rate
 
         if config.getboolean('PPG', 'display_hr') is True or \
            config.getboolean('PPG', 'display_hrv') is True or \
@@ -155,7 +155,7 @@ class EndPoint():
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def get_enabled_graphs(self):
-        return self.data.keys()
+        return list(self.data.keys())
 
     @cherrypy.expose
     @cherrypy.tools.json_in()
