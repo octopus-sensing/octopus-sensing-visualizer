@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "build": "webpack --config webpack.dev.js && cp src/index.html src/index.css ../server/octopus_sensing_visualizer/ui_build",
-    "build-prod": "webpack --config webpack.prod.js && cp src/index.html src/index.css ../server/octopus_sensing_visualizer/ui_build"
+    "build": "webpack --config webpack.dev.js && cp src/index.html src/index.css src/dripicons-v2.woff ../server/octopus_sensing_visualizer/ui_build",
+    "build-prod": "webpack --config webpack.prod.js && cp src/index.html src/index.css src/dripicons-v2.woff ../server/octopus_sensing_visualizer/ui_build"
   },
   "author": "Nastaran Saffaryazdi",
   "license": "GPL-3.0-or-later",

@@ -12,6 +12,14 @@
  You should have received a copy of the GNU General Public License along with Octopus Sensing Visualizer.
 * If not, see <https://www.gnu.org/licenses/>.
 */
+@font-face {
+    font-family: "dripicons";
+    src: url("/dripicons-v2.woff") format('woff');
+}
+
+.icon-button {
+    font-family: dripicons
+}
 
 #root-container {
     display: flex;
@@ -21,11 +29,18 @@
 #controller-container {
     display: flex;
     flex-direction: row;
+    justify-content: center;
 }
 #slider-container {
     display: flex;
     flex-direction: row;
-    width: 80vw;
+    width: 50vw;
+    justify-content: left;
+}
+#textbox-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 #data-container{
@@ -53,6 +68,21 @@
 
 #slider{
     width: 80vw;
+    position: relative;
+}
+
+#play-pause-button{
+    width: 30;
+    position: relative;
+}
+
+#reset-button{
+    width: 30;
+    position: relative;
+}
+
+#window-size-box{
+    width: 100;
     position: relative;
 }
 

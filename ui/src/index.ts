@@ -19,13 +19,11 @@ import { Chart, LineController, LinearScale, Title, CategoryScale, PointElement,
 Chart.register(LineController, LinearScale, Title, CategoryScale, PointElement, LineElement)
 
 import { fetchGraphs, fetchDataLength, fetchEnabledGraphs } from './services'
-import type { Charts } from './types'
+import { charts, createCharts, updateChart, clearCharts} from './chart'
 
-const charts: Charts = {
-    gsr: null,
-    ppg: null,
-    eeg: null,
-}
+var playFlag = false
+var window_size = 3
+var dataLength = 3
 
 function makeCanvas(id: string, htmlClass: string): string {
     return `
@@ -35,9 +33,39 @@ function makeCanvas(id: string, htmlClass: string): string {
 `
 }
 
+function onWindowSizeChange(){
+    const windowSizeBox = document.getElementById("window-size-box") as HTMLInputElement
+    window_size = parseInt(windowSizeBox.value)
+    const slider = document.getElementById("slider") as HTMLInputElement
+    slider.max = (dataLength - window_size + 1).toString()
+}
+
+function onPlayPauseClick(){
+    const playPauseButton = document.getElementById("play-pause-button") as HTMLInputElement
+    if(playFlag == true){
+        playFlag = false
+        playPauseButton.textContent = "\ue019"
+    }
+    else{
+        playFlag = true
+        playPauseButton.textContent = "\ue01a"
+    }
+    console.log("playpause button is clicked")
+}
+
+function onResetClick(){
+    playFlag = false
+    const playPauseButton = document.getElementById("play-pause-button") as HTMLInputElement
+    playPauseButton.textContent = "\ue01a"
+    const slider = document.getElementById("slider") as HTMLInputElement
+    slider.value = "0"
+    console.log("reset button is clicked")
+    clearCharts()
+}
+
 export async function onSliderChange(sliderAmount: string) {
     // TODO: Draw messages in place of the chart when no data was available.
-    const window_size = 5
+ 
     const start_time = Number.parseInt(sliderAmount)
 
     const data = await fetchGraphs(window_size, start_time)
@@ -70,15 +98,29 @@ export async function onSliderChange(sliderAmount: string) {
 
 }
 
-async function initSlider(){
+async function initControls(){
     try {
-        const dataLength = await fetchDataLength()
+        dataLength = await fetchDataLength()
         const slider = document.getElementById("slider") as HTMLInputElement
         slider.value = "0"
         slider.min = "0"
-        slider.max = dataLength.toString()
+        slider.max = (dataLength - window_size + 1).toString()
         slider.step = "1"
         slider.onchange = () => onSliderChange(slider.value)
+
+        const windowSizeBox = document.getElementById("window-size-box") as HTMLInputElement
+        windowSizeBox.min = "1"
+        windowSizeBox.max = dataLength.toString()
+        windowSizeBox.value = "3"
+        windowSizeBox.onchange = () => onWindowSizeChange()
+
+        const playPauseButton = document.getElementById("play-pause-button") as HTMLInputElement
+        playPauseButton.textContent = "\ue01a"
+        playFlag = false
+        playPauseButton.onclick = () => onPlayPauseClick()
+
+        const resetButton = document.getElementById("reset-button") as HTMLInputElement
+        resetButton.onclick = () => onResetClick()
 
     } catch (error) {
     // TODO: Show a notification or something
@@ -88,86 +130,13 @@ async function initSlider(){
 
 function changeSliderValue()
 {
-    const slider = document.getElementById("slider") as HTMLInputElement
-    var sliderAmount = Number.parseInt(slider.value)
-    sliderAmount += 1
-    slider.value = sliderAmount.toString()
-    onSliderChange(slider.value)
-    console.log(slider.value)
-}
-
-function makeChart(id: string, color: string): Chart {
-    const canvas = document.getElementById(id) as HTMLCanvasElement
-    const ctx = canvas.getContext('2d')
-
-    if (!ctx) {
-        throw new Error('Context of the Canvas is null!')
+    if(playFlag == true){
+        const slider = document.getElementById("slider") as HTMLInputElement
+        var sliderAmount = Number.parseInt(slider.value)
+        sliderAmount += 1
+        slider.value = sliderAmount.toString()
+        onSliderChange(slider.value)
     }
-
-    return new Chart(ctx, {
-        type: 'line',
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: false,
-            plugins: {
-                tooltip: { enabled: false },
-                legend: { display: false },
-            },
-        },
-        data: {
-            labels: [],
-            datasets: [
-                {
-                    label: id,
-                    data: [],
-                    fill: false,
-                    borderColor: color,
-                },
-            ],
-        },
-    })
-}
-
-
-function updateChart(chart: Chart, data: number[]) {
-    if (!chart.data.datasets) {
-        throw new Error("in updateChart: 'chart.data.datasets' is undefined! Should never happen!")
-    }
-
-    chart.data.datasets[0].data = data
-
-    const labels = Array(data.length)
-    for (let idx = 0; idx < data.length; idx++) {
-        labels[idx] = idx
-    }
-    chart.data.labels = labels
-
-    // 'none': disables update animation
-    chart.update('none')
-}
-
-function createCharts(enabledGraphs: Array<string>){
-    if (enabledGraphs.some(x=> x=="gsr")){
-        const gsr_chart = makeChart('gsr', '#44d7a3')
-        charts.gsr = gsr_chart
-    }
-
-    if (enabledGraphs.some(x=> x=="ppg")){
-        const ppg_chart = makeChart('ppg', '#d74493')
-        charts.ppg = ppg_chart
-    }
-
-    if (enabledGraphs.some(x=> x=="eeg")){
-        const eeg_charts = Array(16)
-        for (let idx = 0; idx < 16; idx++) {
-            const id = 'eeg-' + idx
-            eeg_charts[idx] = makeChart(id, '#44a3d7')
-        }
-        charts.eeg = eeg_charts
-    }
-
-    
 }
 
 async function makeHtml(enabledGraphs: Array<string>): Promise<string>{
@@ -214,10 +183,8 @@ async function main() {
 
     dataElement.innerHTML = pageHtml
     createCharts(enabledGraphs)
-    initSlider()
-
+    initControls()
     setInterval(changeSliderValue, 1000)
-
 }
 
 main()
