@@ -13,12 +13,12 @@
 * If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { ServerData } from './types'
+import { ServerData, ServerMetaData} from './types'
 
 // data to be sent to the POST request
 
 
-export async function fetchGraphs(window_size: number, start_time: number): Promise<ServerData> {
+export async function fetchServerData(window_size: number, start_time: number): Promise<ServerData> {
     const post_data = {
         window_size: window_size,
         start_time: start_time
@@ -42,24 +42,19 @@ export async function fetchGraphs(window_size: number, start_time: number): Prom
     return response.json()
 }
 
-export async function fetchDataLength(): Promise<number> {
+export async function fetchServerMetadata(): Promise<ServerMetaData> {
 
-    const response = await fetch('http://' + window.location.host + '/api/get_data_length')
-
-    if (!response.ok) {
-        return Promise.reject('Could not fetch data from the server: ' + response.statusText)
-    }
-
-    return response.json()
-}
-
-export async function fetchEnabledGraphs(): Promise<Array<string>> {
-
-    const response = await fetch('http://' + window.location.host + '/api/get_enabled_graphs')
+    const response = await fetch('http://' + window.location.host + '/api/get_metadata')
 
     if (!response.ok) {
         return Promise.reject('Could not fetch data from the server: ' + response.statusText)
     }
-
-    return response.json()
+    const jsonResponse = await response.json()
+    const metadata: ServerMetaData = {
+        dataLength: jsonResponse.data_length ?? null,
+        enabledGraphs: jsonResponse.enabled_graphs ?? null,
+        eegChannels: jsonResponse.eeg_channels ?? null,
+        samplingRates: jsonResponse.sampling_rate ?? null
+    }
+    return metadata
 }

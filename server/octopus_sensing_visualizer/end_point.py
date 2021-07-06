@@ -30,6 +30,7 @@ class EndPoint():
         self.data = {}
         self.sampling_rate = {}
         self.data_length = 0
+        self.eeg_channels = []
         if not os.path.isfile(config_file_path):
             raise Exception("File path is incorrect")
 
@@ -50,7 +51,8 @@ class EndPoint():
         eeg_sampling_rate = config.getint('EEG', 'sampling_rate')
         if not os.path.isfile(eeg_path):
             raise Exception("EEG file path is not valid")
-        eeg_data = prepare_eeg_data(eeg_path)
+        eeg_data, eeg_channels = prepare_eeg_data(eeg_path)
+        self.eeg_channels = eeg_channels
         channels, samples = eeg_data.shape
         self.data_length = (samples/eeg_sampling_rate)
         if config.getboolean('EEG', 'display_signal') is True:
@@ -97,7 +99,6 @@ class EndPoint():
             raise Exception("GSR file path is not valid")
         gsr_data = prepare_gsr_data(gsr_path)
         samples, = gsr_data.shape
-        print(samples)
         self.data_length = (samples/gsr_sampling_rate)
         if config.getboolean('GSR', 'display_signal') is True:
             self.data["gsr"] = gsr_data
@@ -146,26 +147,12 @@ class EndPoint():
                 self.sampling_rate["breathing_rate"] = 1
     
     @cherrypy.expose
-    @cherrypy.tools.json_out()
-    def get_data_length(self):
-        print("**********************************************")
-        print(self.data_length)
-        return self.data_length
-    
-    @cherrypy.expose
-    @cherrypy.tools.json_out()
-    def get_enabled_graphs(self):
-        return list(self.data.keys())
-
-    @cherrypy.expose
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
     def get_data(self):
         body = cherrypy.request.json
         start_time: Optional[int] = body.get('start_time')
         window_size: Optional[int] = body.get('window_size')
-        print(type(start_time), start_time, "start_time")
-        print(type(window_size), window_size, "window_size")
         if start_time is None or window_size is None:
             raise ValueError("Both 'start_time' and 'window_size' params are mandatory")
 
@@ -181,6 +168,18 @@ class EndPoint():
                 output[key] = \
                     value[start:end].tolist()
         return output
+
+    @cherrypy.expose
+    @cherrypy.tools.json_out()
+    def get_metadata(self):
+        metadata = {}
+        metadata["enabled_graphs"] = list(self.data.keys())
+        metadata["data_length"] = self.data_length
+        metadata["sampling_rates"] = self.sampling_rate
+        if "eeg" in list(self.data.keys()):
+            metadata["eeg_channels"] = list(self.eeg_channels)
+        
+        return metadata
 
 
 if __name__ == "__main__":

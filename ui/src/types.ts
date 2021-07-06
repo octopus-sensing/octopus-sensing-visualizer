@@ -21,6 +21,13 @@ export type ServerData = {
     ppg?: number[]
 }
 
+export type ServerMetaData = {
+    dataLength: number
+    enabledGraphs: string[]
+    eegChannels: string[] | null
+    samplingRates: number[]
+}
+
 export type Charts = {
     eeg: Chart[] | null
     gsr: Chart | null

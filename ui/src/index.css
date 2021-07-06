@@ -24,12 +24,14 @@
 #root-container {
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 
 #controller-container {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    height: 30px;
 }
 #slider-container {
     display: flex;
@@ -44,8 +46,11 @@
 }
 
 #data-container{
-    display: flex;
     flex-direction: row;
+    overflow-x:auto;
+    overflow-y:auto;
+    flex: auto;
+    top: 30px;
 }
 
 #signal-container {

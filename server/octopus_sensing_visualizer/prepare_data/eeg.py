@@ -22,8 +22,8 @@ def prepare_eeg_data(path: str):
     print(path)
     df = pd.read_csv(path, index_col=False)
     data = df.to_numpy()
-    print(data.shape)
-    return np.transpose(data)
+    channels = df.head()
+    return np.transpose(data), channels
 
 
 def prepare_power_bands(eeg_data: np.array, sampling_rate: int, window_size: int, overlap: int):

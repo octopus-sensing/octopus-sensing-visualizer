@@ -18,7 +18,7 @@ import { Chart, LineController, LinearScale, Title, CategoryScale, PointElement,
 // To make Charts tree-shakeable, we need to register the components we're using.
 Chart.register(LineController, LinearScale, Title, CategoryScale, PointElement, LineElement)
 
-import { fetchGraphs, fetchDataLength, fetchEnabledGraphs } from './services'
+import { fetchServerData, fetchServerMetadata} from './services'
 import { charts, createCharts, updateChart, clearCharts} from './chart'
 
 var playFlag = false
@@ -68,7 +68,7 @@ export async function onSliderChange(sliderAmount: string) {
  
     const start_time = Number.parseInt(sliderAmount)
 
-    const data = await fetchGraphs(window_size, start_time)
+    const data = await fetchServerData(window_size, start_time)
     if (charts.eeg != null){
         if (data.eeg) {
             const eegData = data.eeg
@@ -98,9 +98,8 @@ export async function onSliderChange(sliderAmount: string) {
 
 }
 
-async function initControls(){
+function initControls(){
     try {
-        dataLength = await fetchDataLength()
         const slider = document.getElementById("slider") as HTMLInputElement
         slider.value = "0"
         slider.min = "0"
@@ -142,7 +141,6 @@ function changeSliderValue()
 async function makeHtml(enabledGraphs: Array<string>): Promise<string>{
     let pageHtml = '<div id="signal-container">'
 
-    // TODO: Fix hard-coded 16, and add other charts
     if (enabledGraphs.some(x=> x=="gsr")){
         pageHtml += '<div class="title">GSR</div>'
         pageHtml += makeCanvas('gsr', 'gsr-chart')
@@ -152,6 +150,7 @@ async function makeHtml(enabledGraphs: Array<string>): Promise<string>{
         pageHtml += '<div class="title">PPG</div>'
         pageHtml += makeCanvas('ppg', 'ppg-chart')
     }
+    // TODO: Fix hard-coded 16, and add other charts
     if (enabledGraphs.some(x=> x=="eeg")){
         pageHtml += '<div class="title">EEG</div>'
         for (let idx = 0; idx < 16; idx++) {
@@ -173,8 +172,9 @@ async function makeHtml(enabledGraphs: Array<string>): Promise<string>{
 }
 
 async function main() {
-    const enabledGraphs = await fetchEnabledGraphs()
-    const pageHtml = await makeHtml(enabledGraphs)
+    const metadata = await fetchServerMetadata()
+    const pageHtml = await makeHtml(metadata.enabledGraphs)
+    dataLength = metadata.dataLength
     
     const dataElement = document.getElementById('data-container')
     if (!dataElement) {
@@ -182,7 +182,7 @@ async function main() {
     }
 
     dataElement.innerHTML = pageHtml
-    createCharts(enabledGraphs)
+    createCharts(metadata.enabledGraphs)
     initControls()
     setInterval(changeSliderValue, 1000)
 }
