@@ -178,7 +178,6 @@ class EndPoint():
         metadata["sampling_rates"] = self.sampling_rate
         if "eeg" in list(self.data.keys()):
             metadata["eeg_channels"] = list(self.eeg_channels)
-        
         return metadata
 
 

@@ -20,6 +20,7 @@ Chart.register(LineController, LinearScale, Title, CategoryScale, PointElement, 
 
 import { fetchServerData, fetchServerMetadata} from './services'
 import { charts, createCharts, updateChart, clearCharts} from './chart'
+import { ServerMetaData } from './types'
 
 var playFlag = false
 var window_size = 3
@@ -138,25 +139,29 @@ function changeSliderValue()
     }
 }
 
-async function makeHtml(enabledGraphs: Array<string>): Promise<string>{
+async function makeHtml(metaData: ServerMetaData): Promise<string>{
     let pageHtml = '<div id="signal-container">'
 
-    if (enabledGraphs.some(x=> x=="gsr")){
+    if (metaData.enabledGraphs.some(x=> x=="gsr")){
         pageHtml += '<div class="title">GSR</div>'
         pageHtml += makeCanvas('gsr', 'gsr-chart')
     }
 
-    if (enabledGraphs.some(x=> x=="ppg")){
+    if (metaData.enabledGraphs.some(x=> x=="ppg")){
         pageHtml += '<div class="title">PPG</div>'
         pageHtml += makeCanvas('ppg', 'ppg-chart')
     }
-    // TODO: Fix hard-coded 16, and add other charts
-    if (enabledGraphs.some(x=> x=="eeg")){
+    if (metaData.enabledGraphs.some(x=> x=="eeg")){
         pageHtml += '<div class="title">EEG</div>'
-        for (let idx = 0; idx < 16; idx++) {
-            const id = 'eeg-' + idx
-            pageHtml += makeCanvas(id, 'eeg-chart')
+        if (metaData.eegChannels != null)
+        {
+            for (let idx = 0; idx < metaData.eegChannels.length; idx++) {
+                const id = 'eeg-' + idx
+                pageHtml += `<div class="title">${metaData.eegChannels[idx]}</div>`
+                pageHtml += makeCanvas(id, 'eeg-chart')
+            }
         }
+
     }
 
     pageHtml += '</div>'
@@ -173,7 +178,7 @@ async function makeHtml(enabledGraphs: Array<string>): Promise<string>{
 
 async function main() {
     const metadata = await fetchServerMetadata()
-    const pageHtml = await makeHtml(metadata.enabledGraphs)
+    const pageHtml = await makeHtml(metadata)
     dataLength = metadata.dataLength
     
     const dataElement = document.getElementById('data-container')
