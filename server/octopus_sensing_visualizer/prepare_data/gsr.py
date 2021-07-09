@@ -44,9 +44,8 @@ def prepare_phasic_tonic(gsr_data: np.array, sampling_rate: int):
 
     @return Phasic and Tonic signals
     '''
-    processed_eda = eda_process(gsr_data[:, 0], sampling_rate=sampling_rate)
+    processed_eda = eda_process(gsr_data, sampling_rate=sampling_rate)
     eda = processed_eda['df']
     phasic = eda["EDA_Phasic"]
     tonic = eda["EDA_Tonic"]
-
     return np.array(phasic), np.array(tonic)

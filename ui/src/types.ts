@@ -19,6 +19,16 @@ export type ServerData = {
     eeg?: number[][]
     gsr?: number[]
     ppg?: number[]
+    deltaBand?: number[]
+    thetaBand?: number[]
+    alphaBand?: number[]
+    betaBand?: number[]
+    gammaBand?: number[]
+    gsrPhasic?: number[]
+    gsrTonic?: number[]
+    hr?: Array<number | null>
+    hrv?: Array<number | null>
+    breathingRate?: Array<number | null>
 }
 
 export type ServerMetaData = {
@@ -32,4 +42,14 @@ export type Charts = {
     eeg: Chart[] | null
     gsr: Chart | null
     ppg: Chart | null
+    deltaBand: Chart | null
+    thetaBand: Chart | null
+    alphaBand: Chart | null
+    betaBand: Chart | null
+    gammaBand: Chart | null
+    gsrPhasic: Chart | null
+    gsrTonic: Chart | null
+    hr: Chart | null
+    hrv: Chart | null
+    breathingRate: Chart | null
 }

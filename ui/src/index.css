@@ -45,7 +45,8 @@
     justify-content: center;
 }
 
-#data-container{
+#data-container {
+    display: flex;
     flex-direction: row;
     overflow-x:auto;
     overflow-y:auto;
@@ -56,18 +57,23 @@
 #signal-container {
     display: flex;
     flex-direction: column;
+    width: 80vw;
 }
 
 #others-container {
     display: flex;
     flex-direction: column;
+    width: 20vw;
 }
 
-.eeg-chart
-.gsr-chart,
-.ppg-chart {
+.big-line-chart {
     height: 15vh;
     width: 80vw;
+    position: relative;
+}
+.small-line-chart {
+    height: 15vh;
+    width: 20vw;
     position: relative;
 }
 

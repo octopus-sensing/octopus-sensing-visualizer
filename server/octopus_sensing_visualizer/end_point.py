@@ -11,6 +11,7 @@
 #
 # You should have received a copy of the GNU General Public License along with Octopus Sensing Visualizer.
 # If not, see <https://www.gnu.org/licenses/>.
+import json
 from typing import Optional
 import os
 import configparser
@@ -72,7 +73,7 @@ class EndPoint():
                 raise Exception("overlap should be smaller than window size")
 
             power_bands = \
-                prepare_power_bands(eeg_path,
+                prepare_power_bands(eeg_data,
                                     eeg_sampling_rate,
                                     window_size,
                                     overlap)
@@ -110,10 +111,10 @@ class EndPoint():
                 prepare_phasic_tonic(gsr_data, gsr_sampling_rate)
             if config.getboolean('GSR', 'display_phasic') is True:
                 self.data["gsr_phasic"] = phasic
-                self.sampling_rate["gsr_phasic"] = 1
+                self.sampling_rate["gsr_phasic"] = gsr_sampling_rate
             if config.getboolean('GSR', 'display_tonic') is True:
                 self.data["gsr_tonic"] = tonic
-                self.sampling_rate["gsr_tonic"] = 1
+                self.sampling_rate["gsr_tonic"] = gsr_sampling_rate
 
     def _load_ppg_data(self, config):
         ppg_path = config.get('PPG', 'path')
@@ -148,7 +149,6 @@ class EndPoint():
     
     @cherrypy.expose
     @cherrypy.tools.json_in()
-    @cherrypy.tools.json_out()
     def get_data(self):
         body = cherrypy.request.json
         start_time: Optional[int] = body.get('start_time')
@@ -167,7 +167,9 @@ class EndPoint():
             else:
                 output[key] = \
                     value[start:end].tolist()
-        return output
+        json_out = json.dumps(output)
+        json_out = json_out.replace("NaN", "null")
+        return json_out
 
     @cherrypy.expose
     @cherrypy.tools.json_out()

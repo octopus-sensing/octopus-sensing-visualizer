@@ -39,7 +39,25 @@ export async function fetchServerData(window_size: number, start_time: number): 
         return Promise.reject('Could not fetch data from the server: ' + response.statusText)
     }
 
-    return response.json()
+    const jsonResponse = await response.json()
+    
+    const data: ServerData = {
+        eeg: jsonResponse.eeg ?? null,
+        gsr: jsonResponse.gsr ?? null,
+        ppg: jsonResponse.ppg ?? null,
+        deltaBand: jsonResponse.delta_band ?? null,
+        thetaBand: jsonResponse.theta_band ?? null,
+        alphaBand: jsonResponse.alpha_band ?? null,
+        betaBand: jsonResponse.beta_band ?? null,
+        gammaBand: jsonResponse.gamma_band ?? null,
+        gsrPhasic: jsonResponse.gsr_phasic ?? null,
+        gsrTonic: jsonResponse.gsr_tonic ?? null,
+        hr: jsonResponse.hr ?? null,
+        hrv: jsonResponse.hrv ?? null,
+        breathingRate: jsonResponse.breathing_rate ?? null,
+    }
+
+    return data
 }
 
 export async function fetchServerMetadata(): Promise<ServerMetaData> {
