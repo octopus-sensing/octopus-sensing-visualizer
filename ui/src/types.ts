@@ -24,6 +24,7 @@ export type ServerData = {
     alphaBand?: number[]
     betaBand?: number[]
     gammaBand?: number[]
+    powerBands?: number[]
     gsrPhasic?: number[]
     gsrTonic?: number[]
     hr?: Array<number | null>
@@ -38,6 +39,7 @@ export type ServerMetaData = {
     samplingRates: number[]
 }
 
+
 export type Charts = {
     eeg: Chart[] | null
     gsr: Chart | null
@@ -47,6 +49,7 @@ export type Charts = {
     alphaBand: Chart | null
     betaBand: Chart | null
     gammaBand: Chart | null
+    powerBands: Chart | null
     gsrPhasic: Chart | null
     gsrTonic: Chart | null
     hr: Chart | null

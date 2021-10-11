@@ -16,7 +16,7 @@ from typing import Optional
 import os
 import configparser
 import cherrypy
-from octopus_sensing_visualizer.prepare_data.eeg import prepare_eeg_data, prepare_power_bands
+from octopus_sensing_visualizer.prepare_data.eeg import prepare_eeg_data, prepare_power_bands, prepare_power_bands_on_the_fly
 from octopus_sensing_visualizer.prepare_data.gsr import prepare_gsr_data, prepare_phasic_tonic
 from octopus_sensing_visualizer.prepare_data.ppg import prepare_ppg_data, prepare_ppg_components
 
@@ -32,6 +32,7 @@ class EndPoint():
         self.sampling_rate = {}
         self.data_length = 0
         self.eeg_channels = []
+        self.__power_bands = []
         if not os.path.isfile(config_file_path):
             raise Exception("File path is incorrect")
 
@@ -65,17 +66,17 @@ class EndPoint():
            config.getboolean('EEG', 'display_gamma_signal') is True or \
            config.getboolean('EEG', 'display_theta_signal') is True or \
            config.getboolean('EEG', 'display_delta_signal') is True:
-            window_size = config.getint('EEG', 'window_size')
+            config_window_size = config.getint('EEG', 'window_size')
             overlap = config.getint('EEG', 'overlap')
-            if window_size < 1:
+            if config_window_size < 1:
                 raise Exception("Window size should be equal or bigger than 1 seconds")
-            if overlap > window_size:
+            if overlap > config_window_size:
                 raise Exception("overlap should be smaller than window size")
 
             power_bands = \
                 prepare_power_bands(eeg_data,
                                     eeg_sampling_rate,
-                                    window_size,
+                                    config_window_size,
                                     overlap)
             if config.getboolean('EEG', 'display_alpha_signal') is True:
                 self.data["alpha_band"] = power_bands["Alpha"]
@@ -92,6 +93,12 @@ class EndPoint():
             if config.getboolean('EEG', 'display_delta_signal') is True:
                 self.data["delta_band"] = power_bands["Delta"]
                 self.sampling_rate["delta_band"] = 1
+            
+        if config.getboolean('EEG', 'display_power_band_bars') is True:
+            # Later we will measure power bands based on this data and sampling rate
+            self.data["power_bands"] = eeg_data
+            self.sampling_rate["power_bands"] = eeg_sampling_rate
+
 
     def _load_gsr_data(self, config):
         gsr_path = config.get('GSR', 'path')
@@ -164,6 +171,15 @@ class EndPoint():
             if key == "eeg":
                 output[key] = \
                     value[:, start:end].tolist()
+            elif key == "power_bands":
+                power_bands = \
+                    prepare_power_bands_on_the_fly(value,
+                                                   self.sampling_rate[key],
+                                                   start_time,
+                                                   window_size)
+                output[key] = power_bands
+                print(power_bands)
+
             else:
                 output[key] = \
                     value[start:end].tolist()

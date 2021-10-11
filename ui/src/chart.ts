@@ -12,6 +12,7 @@ export const charts: Charts = {
     alphaBand: null,
     betaBand: null,
     gammaBand: null,
+    powerBands: null,
     gsrPhasic: null,
     gsrTonic: null,
     hr: null,
@@ -95,16 +96,21 @@ export function updateChart(chart: Chart, data: Array<number | null>, time: numb
         throw new Error("in updateChart: 'chart.data.datasets' is undefined! Should never happen!")
     }
 
-    chart.data.datasets[0].data = data
+        if (chart.id == "power_bands"){
+            console.log(data)
+        }
 
-    const labels = Array(data.length)
-    for (let idx = 0; idx < data.length; idx++) { 
-        labels[idx] = ((idx / 128) + time).toFixed(2)
-    }
-    chart.data.labels = labels
+        chart.data.datasets[0].data = data
 
-    // 'none': disables update animation
-    chart.update('none')
+        const labels = Array(data.length)
+        for (let idx = 0; idx < data.length; idx++) { 
+            labels[idx] = ((idx / 128) + time).toFixed(2)
+        }
+        chart.data.labels = labels
+
+        // 'none': disables update animation
+        chart.update('none')
+
 }
 
 export function clearCharts() {
@@ -168,6 +174,11 @@ export function createCharts(enabledGraphs: Array<string>) {
     if (enabledGraphs.some((x) => x == 'gamma_band')) {
         const gammaChart = makeLineChart('gamma_band', '#44a3d7')
         charts.gammaBand = gammaChart
+    }
+
+    if (enabledGraphs.some((x) => x == 'power_bands')) {
+        const powerBandsCahrt = makeBarChart('power_bands', '#44a3d7')
+        charts.powerBands = powerBandsCahrt
     }
 
     if (enabledGraphs.some((x) => x == 'gsr_phasic')) {

@@ -13,10 +13,10 @@
 * If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { Chart, LineController, LinearScale, Title, CategoryScale, PointElement, LineElement } from 'chart.js'
+import { Chart, LineController, BarController, BarElement, LinearScale, Title, CategoryScale, PointElement, LineElement } from 'chart.js'
 
 // To make Charts tree-shakeable, we need to register the components we're using.
-Chart.register(LineController, LinearScale, Title, CategoryScale, PointElement, LineElement)
+Chart.register(BarController, BarElement, LineController, BarController, LinearScale, Title, CategoryScale, PointElement, LineElement)
 
 import { fetchServerData, fetchServerMetadata} from './services'
 import { charts, createCharts, updateChart, clearCharts} from './chart'
@@ -94,6 +94,13 @@ export async function onSliderChange(sliderAmount: string) {
     if(charts.ppg != null){
         if (data.ppg) {
             updateChart(charts.ppg, data.ppg, start_time)
+        }
+    }
+    console.log(data.powerBands)
+    if(charts.powerBands != null){
+        if (data.powerBands) {
+            console.log(data.powerBands)
+            updateChart(charts.powerBands, data.powerBands, start_time)
         }
     }
 
@@ -243,6 +250,11 @@ async function makeHtml(metaData: ServerMetaData): Promise<string>{
     if (metaData.enabledGraphs.some(x=> x=="breathing_rate")){
         pageHtml += '<div class="title">Breathing Rate</div>'
         pageHtml += makeCanvas('breathing_rate', 'small-line-chart')
+    }
+    if (metaData.enabledGraphs.some(x=> x=="power_bands")){
+        console.log("power bands")
+        pageHtml += '<div class="title">Power Bands</div>'
+        pageHtml += makeCanvas('power_bands', 'small-line-chart')
     }
     if (metaData.enabledGraphs.some(x=> x=="delta_band")){
         pageHtml += '<div class="title">Delta Band</div>'

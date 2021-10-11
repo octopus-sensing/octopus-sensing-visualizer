@@ -45,6 +45,7 @@ export async function fetchServerData(window_size: number, start_time: number): 
         eeg: jsonResponse.eeg ?? null,
         gsr: jsonResponse.gsr ?? null,
         ppg: jsonResponse.ppg ?? null,
+        powerBands: jsonResponse.power_bands ?? null,
         deltaBand: jsonResponse.delta_band ?? null,
         thetaBand: jsonResponse.theta_band ?? null,
         alphaBand: jsonResponse.alpha_band ?? null,
