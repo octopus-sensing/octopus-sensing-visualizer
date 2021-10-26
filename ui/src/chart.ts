@@ -84,6 +84,7 @@ export function makeBarChart(id: string, color: string): Chart {
                     label: id,
                     data: [],
                     borderColor: color,
+                    backgroundColor: color,
                 },
             ],
         },

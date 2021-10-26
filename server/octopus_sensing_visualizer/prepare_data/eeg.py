@@ -15,6 +15,9 @@ import datetime
 import pandas as pd
 import numpy as np
 
+from scipy.signal import welch
+from scipy.integrate import simps
+
 # TODO Acelerometer, topomap, fft plot, time-frequency
 
 
@@ -243,9 +246,6 @@ def _get_total_power_bands(data: np.array, sampling_rate: int, eeg_bands: dict):
     print(power_bands)
     return power_bands
 
-
-from scipy.signal import welch
-from scipy.integrate import simps
 def bandpower(data, sampling_rate, band, window_sec=None, relative=False):
     '''
     Computes the average power of the signal x in a specific frequency band.
