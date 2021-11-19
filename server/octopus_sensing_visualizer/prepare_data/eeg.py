@@ -264,9 +264,7 @@ def bandpower(data, sampling_rate, band, window_sec=None, relative=False):
     @rtype: float
     @return bp : Absolute or relative band power.
     '''
-    print("***************",band)
     band = np.asarray(band)
-    print(band)
     low, high = band
 
     # Define window length

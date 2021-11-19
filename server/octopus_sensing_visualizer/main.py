@@ -29,7 +29,7 @@ def main():
             'tools.staticdir.index': 'index.html',
         },
     })
-    end_point = EndPoint("octopus_sensing_visualizer/config.conf")
+    end_point = EndPoint("./octopus_sensing_visualizer_config.conf")
     cherrypy.tree.mount(end_point, '/api')
 
     cherrypy.server.socket_host = '0.0.0.0'
