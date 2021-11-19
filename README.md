@@ -10,7 +10,7 @@ a separated project and can be installed if we need to visualize data.
 It can be used for displaying recorded data with
 the same format as we recorded through Octopus Sensing.
 
-**To see the full documentation go to [Otopus Sensing Visualizer](https://octopus-sensing.nastaran-saffar.me/visualizer) website.**
+**To see the full documentation go to [Otopus Sensing](https://octopus-sensing.nastaran-saffar.me/visualizer) website.**
 
 Copyright
 ---------
