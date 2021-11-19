@@ -40,9 +40,6 @@ def prepare_ppg_data(path: str):
     return data[:, 0]
 
 
-path = "/media/nastaran/HDD/test_data/Shimmer3/ppg_video-43-00-09.csv"
-
-
 def prepare_ppg_components(ppg_data: np.array, sampling_rate: int,
                            window_size: int = 20, overlap: int = 19):
     '''
