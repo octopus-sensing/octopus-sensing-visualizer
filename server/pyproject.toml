@@ -1,12 +1,14 @@
 [tool.poetry]
 name = "octopus-sensing-visualizer"
-version = "1.0.1"
+version = "1.0.2"
 description = "Library for visualizing data synchronously recorded from different sensors"
 authors = ["Nastaran Saffaryazdi <nsaffar@gmail.com>", "Aidin Gharibnavaz <aidin@aidinhut.com>"]
 license = "GPL-3.0-or-later"
 homepage = "https://octopus-sensing.nastaran-saffar.me"
 repository = "https://github.com/nastaran62/octopus-sensing-visualizer"
 keywords = ["sensors", "eeg", "gsr", "visualizer"]
+readme = "README.md"
+include = ["octopus_sensing_visualizer/ui_build/*"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
