@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "octopus-sensing-visualizer"
-version = "1.1.1"
+version = "1.0.0"
 description = "Library for visualizing data synchronously recorded from different sensors"
 authors = ["Nastaran Saffaryazdi <nsaffar@gmail.com>", "Aidin Gharibnavaz <aidin@aidinhut.com>"]
 license = "GPL-3.0-or-later"
