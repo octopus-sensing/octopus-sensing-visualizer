@@ -190,7 +190,7 @@ def prepare_power_bands_on_the_fly0(data, sampling_rate, start_time, length, eeg
     power_bands = _get_total_power_bands(extracted_data, sampling_rate, eeg_bands)
     return power_bands
 
-def _get_power_bands(signal: np.array, sampling_rate: int, eeg_bands: dict):
+def _get_power_bands(signal: np.ndarray, sampling_rate: int, eeg_bands: dict):
     sample_count, = signal.shape
     # Get real amplitudes of FFT (only in postive frequencies)
     fft_values = np.absolute(np.fft.rfft(signal))
@@ -211,7 +211,7 @@ def _get_power_bands(signal: np.array, sampling_rate: int, eeg_bands: dict):
     return eeg_band_fft
 
 
-def _get_total_power_bands(data: np.array, sampling_rate: int, eeg_bands: dict):
+def _get_total_power_bands(data: np.ndarray, sampling_rate: int, eeg_bands: dict):
     '''
     calculates alpha, betha, delta, gamma bands for each channel
     It uses fft
@@ -246,7 +246,7 @@ def _get_total_power_bands(data: np.array, sampling_rate: int, eeg_bands: dict):
     print(power_bands)
     return power_bands
 
-def bandpower(data, sampling_rate, band, window_sec=None, relative=False):
+def bandpower(data: np.ndarray, sampling_rate:int, band: list, window_sec: int=None, relative: bool=False):
     '''
     Computes the average power of the signal x in a specific frequency band.
 

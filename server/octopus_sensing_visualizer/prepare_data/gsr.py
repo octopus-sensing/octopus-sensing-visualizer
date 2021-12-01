@@ -32,7 +32,7 @@ def prepare_gsr_data(path: str):
     return data[:, 0]
 
 
-def prepare_phasic_tonic(gsr_data: np.array, sampling_rate: int):
+def prepare_phasic_tonic(gsr_data: np.ndarray, sampling_rate: int):
     '''
     Extract Pahsic and Tonic components from GSR data saved in the specified path
 

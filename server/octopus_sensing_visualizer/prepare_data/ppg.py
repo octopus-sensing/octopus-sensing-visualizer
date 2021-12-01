@@ -40,7 +40,7 @@ def prepare_ppg_data(path: str):
     return data[:, 0]
 
 
-def prepare_ppg_components(ppg_data: np.array, sampling_rate: int,
+def prepare_ppg_components(ppg_data: np.ndarray, sampling_rate: int,
                            window_size: int = 20, overlap: int = 19):
     '''
     Extracts HR, HRV and breathing rate from PPG
