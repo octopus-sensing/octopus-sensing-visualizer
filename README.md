@@ -21,4 +21,4 @@ This program is free software: you can redistribute it and/or modify it under th
 General Public License as published by the Free Software Foundation, either version 3 of the
 License, or (at your option) any later version.
 
-See [License file](https://github.com/nastaran62/octopus-sensing/blob/master/LICENSE)  for full terms.
+See [License file](https://github.com/octopus-sensing/octopus-sensing/blob/master/LICENSE)  for full terms.
