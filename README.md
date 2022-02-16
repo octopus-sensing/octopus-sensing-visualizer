@@ -15,7 +15,7 @@ the same format as we recorded through Octopus Sensing.
 Copyright
 ---------
 
-Copyright © 2021 [Nastaran Saffaryazdi]
+Copyright © 2021-2022 [Nastaran Saffaryazdi]
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU
 General Public License as published by the Free Software Foundation, either version 3 of the
