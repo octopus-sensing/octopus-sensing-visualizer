@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "octopus-sensing-visualizer"
-version = "1.1.1"
+version = "1.2.0"
 description = "Library for visualizing data synchronously recorded from different sensors"
 authors = ["Nastaran Saffaryazdi <nsaffar@gmail.com>", "Aidin Gharibnavaz <aidin@aidinhut.com>"]
 license = "GPL-3.0-or-later"
@@ -12,12 +12,12 @@ include = ["octopus_sensing_visualizer/ui_build/*"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-numpy = "^1.21.0"
-pandas = "^1.2.5"
-neurokit = "^0.2.0"
+numpy = "^1.26.2"
+pandas = "^1.5.3"
+neurokit2 = "^0.2.7"
 heartpy = "^1.2.7"
-pycairo = "^1.20.1"
-CherryPy = "^18.6.0"
+pycairo = "^1.25.1"
+CherryPy = "^18.9.0"
 
 [tool.poetry.dev-dependencies]
 

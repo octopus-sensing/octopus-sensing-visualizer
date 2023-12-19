@@ -14,7 +14,7 @@
 
 import pandas as pd
 import numpy as np
-from neurokit.bio.bio_eda import eda_process
+import neurokit2
 
 
 def prepare_gsr_data(path: str):
@@ -44,8 +44,7 @@ def prepare_phasic_tonic(gsr_data: np.ndarray, sampling_rate: int):
 
     @return Phasic and Tonic signals
     '''
-    processed_eda = eda_process(gsr_data, sampling_rate=sampling_rate)
-    eda = processed_eda['df']
+    eda, info, = neurokit2.eda_process(gsr_data, sampling_rate=sampling_rate)
     phasic = eda["EDA_Phasic"]
     tonic = eda["EDA_Tonic"]
     return np.array(phasic), np.array(tonic)

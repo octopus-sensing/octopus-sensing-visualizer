@@ -26,12 +26,11 @@ def prepare_eeg_data(path: str):
     Reads EEG csv file and return its data
 
     @param str path: EEG file path
-    
+
     @rtype: numpy.array, numpy.array
 
     @return: EEG data, channel names
     '''
-    print(path)
     df = pd.read_csv(path, index_col=False)
     data = df.to_numpy()
     channels = df.head()
@@ -68,8 +67,8 @@ def prepare_power_bands(eeg_data: np.array, sampling_rate: int, window_size: int
     gamma = []
     start_time = 0
     signal_length = int(samples/sampling_rate)  # Length of signal in seconds
-    if (start_time + window_size) > (samples/sampling_rate):
-        raise Exception("Desired window are out of data range")
+    if (start_time + window_size) > (samples / sampling_rate):
+        raise Exception(f"Desired window are out of data range. Number of samples: {samples} Sampleing Rate: {sampling_rate}")
     while (start_time + window_size) < (samples/sampling_rate):
         extracted_data = \
             eeg_data[start_time*sampling_rate:(start_time+window_size)*sampling_rate, :]
@@ -186,7 +185,7 @@ def prepare_power_bands_on_the_fly0(data, sampling_rate, start_time, length, eeg
                      'Alpha': (8, 12),
                      'Beta': (12, 30),
                      'Gamma': (30, 45)}
-    extracted_data = data[:, start_time*sampling_rate:(start_time+length)*sampling_rate]        
+    extracted_data = data[:, start_time*sampling_rate:(start_time+length)*sampling_rate]
     power_bands = _get_total_power_bands(extracted_data, sampling_rate, eeg_bands)
     return power_bands
 
@@ -243,7 +242,6 @@ def _get_total_power_bands(data: np.ndarray, sampling_rate: int, eeg_bands: dict
          "Alpha": np.mean(np.array(alpha)),
          "Beta": np.mean(np.array(beta)),
          "Gamma": np.mean(np.array(gamma))}
-    print(power_bands)
     return power_bands
 
 def bandpower(data: np.ndarray, sampling_rate:int, band: list, window_sec: int=None, relative: bool=False):
@@ -296,5 +294,3 @@ if __name__ == "__main__":
     a = datetime.datetime.now()
     bands = prepare_power_bands_on_the_fly(path, 128, 5, 5)
     b = datetime.datetime.now()
-    print(bands)
-    print(b - a)

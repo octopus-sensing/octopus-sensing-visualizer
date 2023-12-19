@@ -93,7 +93,7 @@ class EndPoint():
             if config.getboolean('EEG', 'display_delta_signal') is True:
                 self.data["delta_band"] = power_bands["Delta"]
                 self.sampling_rate["delta_band"] = 1
-            
+
         if config.getboolean('EEG', 'display_power_band_bars') is True:
             # Later we will measure power bands based on this data and sampling rate
             self.data["power_bands"] = eeg_data
@@ -153,7 +153,7 @@ class EndPoint():
             if config.getboolean('PPG', 'display_breathing_rate') is True:
                 self.data["breathing_rate"] = hr_components["breathing_rate"]
                 self.sampling_rate["breathing_rate"] = 1
-    
+
     @cherrypy.expose
     @cherrypy.tools.json_in()
     def get_data(self):
@@ -178,7 +178,6 @@ class EndPoint():
                                                    start_time,
                                                    window_size)
                 output[key] = power_bands
-                print(power_bands)
 
             else:
                 output[key] = \
@@ -202,6 +201,3 @@ class EndPoint():
 if __name__ == "__main__":
     end_point = EndPoint("server/octopus_sensing_visualizer/config.conf")
     output = end_point.get_data(10, 3)
-    print(end_point.sampling_rate.keys())
-    print(len(output['ppg']))
-    print(output["alpha_band"])

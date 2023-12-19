@@ -62,7 +62,6 @@ def prepare_ppg_components(ppg_data: np.ndarray, sampling_rate: int,
                             sample_rate=sampling_rate,
                             order=3,
                             filtertype='bandpass')
-    print(sampling_rate, data.shape)
     wd, m = hp.process_segmentwise(data,
                                    sample_rate=sampling_rate,
                                    segment_width=window_size,
