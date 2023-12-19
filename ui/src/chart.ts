@@ -65,9 +65,7 @@ export function makeLineChart(id: string, color: string, autoSkipPadding: number
 }
 
 export function makeBarChart(id: string, color: string): Chart {
-    console.log(id)
     const canvas = document.getElementById(id) as HTMLCanvasElement
-    console.log(canvas)
     const ctx = canvas.getContext('2d')
 
     if (!ctx) {
@@ -96,15 +94,10 @@ export function updateChart(chart: Chart, data: Array<number | null>, time: numb
     if (!chart.data.datasets) {
         throw new Error("in updateChart: 'chart.data.datasets' is undefined! Should never happen!")
     }
-
-        if (chart.id == "power_bands"){
-            console.log(data)
-        }
-
         chart.data.datasets[0].data = data
 
         const labels = Array(data.length)
-        for (let idx = 0; idx < data.length; idx++) { 
+        for (let idx = 0; idx < data.length; idx++) {
             labels[idx] = ((idx / 128) + time).toFixed(2)
         }
         chart.data.labels = labels
@@ -152,7 +145,6 @@ export function createCharts(enabledGraphs: Array<string>) {
     }
 
     if (enabledGraphs.some((x) => x == 'delta_band')) {
-        console.log("create chart")
         const deltaChart = makeLineChart('delta_band', '#44a3d7')
         charts.deltaBand = deltaChart
     }

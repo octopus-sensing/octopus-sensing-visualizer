@@ -5,15 +5,16 @@
   "main": "index.ts",
   "scripts": {
     "build": "webpack --config webpack.dev.js && cp src/index.html src/index.css src/dripicons-v2.woff ../server/octopus_sensing_visualizer/ui_build",
-    "build-prod": "webpack --config webpack.prod.js && cp src/index.html src/index.css src/dripicons-v2.woff ../server/octopus_sensing_visualizer/ui_build"
+    "build-prod": "webpack --config webpack.prod.js && cp src/index.html src/index.css src/dripicons-v2.woff ../server/octopus_sensing_visualizer/ui_build",
+    "check": "tsc && prettier --config .prettierrc --write src/* && eslint src/*.ts"
   },
   "author": "Nastaran Saffaryazdi",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "chart.js": "^3.4.0"
+    "chart.js": "^4.4.1"
   },
   "devDependencies": {
-    "@types/chart.js": "^2.9.32",
+    "@types/chart.js": "^2.9.41",
     "@typescript-eslint/eslint-plugin": "^4.28.0",
     "@typescript-eslint/parser": "^4.28.0",
     "eslint": "^7.29.0",
@@ -21,8 +22,11 @@
     "prettier": "^2.3.2",
     "ts-loader": "^9.2.3",
     "typescript": "^4.3.4",
-    "webpack": "^5.40.0",
-    "webpack-cli": "^4.7.2",
-    "webpack-merge": "^5.8.0"
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-merge": "^5.10.0"
+  },
+  "volta": {
+    "node": "20.10.0"
   }
 }
