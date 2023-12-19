@@ -1,7 +1,6 @@
-import { Chart, LegendItem, ChartData } from 'chart.js'
+import { Chart } from 'chart.js'
 
 import type { Charts } from './types'
-
 
 export const charts: Charts = {
     gsr: null,
@@ -17,10 +16,10 @@ export const charts: Charts = {
     gsrTonic: null,
     hr: null,
     hrv: null,
-    breathingRate: null
+    breathingRate: null,
 }
 
-export function makeLineChart(id: string, color: string, autoSkipPadding: number = 100): Chart {
+export function makeLineChart(id: string, color: string, autoSkipPadding = 100): Chart {
     const canvas = document.getElementById(id) as HTMLCanvasElement
     const ctx = canvas.getContext('2d')
 
@@ -42,10 +41,10 @@ export function makeLineChart(id: string, color: string, autoSkipPadding: number
                 x: {
                     ticks: {
                         autoSkip: true,
-                        autoSkipPadding: autoSkipPadding
-                    }
-                }
-        },
+                        autoSkipPadding: autoSkipPadding,
+                    },
+                },
+            },
         },
 
         data: {
@@ -89,33 +88,30 @@ export function makeBarChart(id: string, color: string): Chart {
     })
 }
 
-
-export function updateChart(chart: Chart, data: Array<number | null>, time: number) {
+export function updateChart(chart: Chart, data: Array<number | null>, time: number): void {
     if (!chart.data.datasets) {
         throw new Error("in updateChart: 'chart.data.datasets' is undefined! Should never happen!")
     }
-        chart.data.datasets[0].data = data
+    chart.data.datasets[0].data = data
 
-        const labels = Array(data.length)
-        for (let idx = 0; idx < data.length; idx++) {
-            labels[idx] = ((idx / 128) + time).toFixed(2)
-        }
-        chart.data.labels = labels
+    const labels = Array(data.length)
+    for (let idx = 0; idx < data.length; idx++) {
+        labels[idx] = (idx / 128 + time).toFixed(2)
+    }
+    chart.data.labels = labels
 
-        // 'none': disables update animation
-        chart.update('none')
-
+    // 'none': disables update animation
+    chart.update('none')
 }
 
-export function clearCharts() {
-    let key: keyof Charts;
-    for (key in charts){
+export function clearCharts(): void {
+    let key: keyof Charts
+    for (key in charts) {
         if (charts[key] === charts.eeg) {
             if (charts.eeg != null) {
                 charts.eeg.forEach((channelChart) => updateChart(channelChart, [], 0))
             }
-        }
-        else{
+        } else {
             if (charts[key] != null) {
                 const chart = charts[key] as Chart
                 updateChart(chart, [], 0)
@@ -124,7 +120,7 @@ export function clearCharts() {
     }
 }
 
-export function createCharts(enabledGraphs: Array<string>) {
+export function createCharts(enabledGraphs: Array<string>): void {
     if (enabledGraphs.some((x) => x == 'gsr')) {
         const gsrChart = makeLineChart('gsr', '#44d7a3')
         charts.gsr = gsrChart

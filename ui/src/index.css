@@ -13,12 +13,12 @@
 * If not, see <https://www.gnu.org/licenses/>.
 */
 @font-face {
-    font-family: "dripicons";
-    src: url("/dripicons-v2.woff") format('woff');
+    font-family: 'dripicons';
+    src: url('/dripicons-v2.woff') format('woff');
 }
 
 .icon-button {
-    font-family: dripicons
+    font-family: dripicons;
 }
 
 #root-container {
@@ -48,8 +48,8 @@
 #data-container {
     display: flex;
     flex-direction: row;
-    overflow-x:auto;
-    overflow-y:auto;
+    overflow-x: auto;
+    overflow-y: auto;
     flex: auto;
     top: 30px;
 }
@@ -77,22 +77,22 @@
     position: relative;
 }
 
-#slider{
+#slider {
     width: 80vw;
     position: relative;
 }
 
-#play-pause-button{
+#play-pause-button {
     width: 30;
     position: relative;
 }
 
-#reset-button{
+#reset-button {
     width: 30;
     position: relative;
 }
 
-#window-size-box{
+#window-size-box {
     width: 100;
     position: relative;
 }

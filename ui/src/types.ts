@@ -13,7 +13,7 @@
 * If not, see <https://www.gnu.org/licenses/>.
 */
 
-import {Chart} from 'chart.js'
+import { Chart } from 'chart.js'
 
 export type ServerData = {
     eeg?: number[][]
@@ -38,7 +38,6 @@ export type ServerMetaData = {
     eegChannels: string[] | null
     samplingRates: number[]
 }
-
 
 export type Charts = {
     eeg: Chart[] | null

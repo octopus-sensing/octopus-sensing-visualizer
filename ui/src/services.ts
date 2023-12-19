@@ -13,24 +13,26 @@
 * If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { ServerData, ServerMetaData} from './types'
+import { ServerData, ServerMetaData } from './types'
 
 // data to be sent to the POST request
 
-
-export async function fetchServerData(window_size: number, start_time: number): Promise<ServerData> {
+export async function fetchServerData(
+    window_size: number,
+    start_time: number,
+): Promise<ServerData> {
     const post_data = {
         window_size: window_size,
-        start_time: start_time
-      }
-      
+        start_time: start_time,
+    }
+
     const body = {
         method: 'POST',
         headers: {
-            'Accept': 'application/json',
+            Accept: 'application/json',
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(post_data)
+        body: JSON.stringify(post_data),
     }
 
     const response = await fetch('http://' + window.location.host + '/api/get_data', body)
@@ -40,7 +42,7 @@ export async function fetchServerData(window_size: number, start_time: number): 
     }
 
     const jsonResponse = await response.json()
-    
+
     const data: ServerData = {
         eeg: jsonResponse.eeg ?? null,
         gsr: jsonResponse.gsr ?? null,
@@ -62,7 +64,6 @@ export async function fetchServerData(window_size: number, start_time: number): 
 }
 
 export async function fetchServerMetadata(): Promise<ServerMetaData> {
-
     const response = await fetch('http://' + window.location.host + '/api/get_metadata')
 
     if (!response.ok) {
@@ -73,7 +74,7 @@ export async function fetchServerMetadata(): Promise<ServerMetaData> {
         dataLength: jsonResponse.data_length ?? null,
         enabledGraphs: jsonResponse.enabled_graphs ?? null,
         eegChannels: jsonResponse.eeg_channels ?? null,
-        samplingRates: jsonResponse.sampling_rate ?? null
+        samplingRates: jsonResponse.sampling_rate ?? null,
     }
     return metadata
 }
