@@ -16,7 +16,7 @@ import pandas as pd
 import numpy as np
 
 from scipy.signal import welch
-from scipy.integrate import simps
+from scipy.integrate import simpson
 
 # TODO Acelerometer, topomap, fft plot, time-frequency
 
@@ -281,10 +281,10 @@ def bandpower(data: np.ndarray, sampling_rate:int, band: list, window_sec: int=N
     idx_band = np.logical_and(freqs >= low, freqs <= high)
 
     # Integral approximation of the spectrum using Simpson's rule.
-    bp = simps(psd[idx_band], dx=freq_res)
+    bp = simpson(psd[idx_band], dx=freq_res)
 
     if relative:
-        bp /= simps(psd, dx=freq_res)
+        bp /= simpson(psd, dx=freq_res)
     return bp
 
 

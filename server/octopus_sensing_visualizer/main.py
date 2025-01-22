@@ -33,6 +33,8 @@ def main():
     cherrypy.tree.mount(end_point, '/api')
 
     cherrypy.server.socket_host = '0.0.0.0'
+    # TODO: Make it a config or a command line parameter
+    cherrypy.server.socket_port = 9980
     cherrypy.engine.autoreload.on = False
     cherrypy.engine.start()
     cherrypy.engine.block()
