@@ -14,7 +14,6 @@
 import json
 from typing import Optional
 import os
-import configparser
 import cherrypy
 from octopus_sensing_visualizer.prepare_data.eeg import prepare_eeg_data, prepare_power_bands, prepare_power_bands_on_the_fly
 from octopus_sensing_visualizer.prepare_data.gsr import prepare_gsr_data, prepare_phasic_tonic
@@ -26,19 +25,13 @@ class RootHandler():
 
 
 class EndPoint():
-    def __init__(self, config_file_path=None):
+    def __init__(self, config):
 
         self.data = {}
         self.sampling_rate = {}
         self.data_length = 0
         self.eeg_channels = []
         self.__power_bands = []
-        if not os.path.isfile(config_file_path):
-            raise Exception("File path is incorrect")
-
-        # Load the configuration file
-        config = configparser.RawConfigParser(allow_no_value=True)
-        config.read(config_file_path)
 
         for section in config.sections():
             if section == "EEG":

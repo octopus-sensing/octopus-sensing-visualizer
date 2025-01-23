@@ -15,12 +15,25 @@
 import os
 import sys
 import cherrypy
+import configparser
 from octopus_sensing_visualizer.end_point import *
 
+CONFIG_FILE_PATH="./octopus_sensing_visualizer_config.conf"
 
 def main():
     ui_build_path = os.path.join(os.path.dirname(
         os.path.abspath(sys.modules[__name__].__file__)), 'ui_build')
+
+    if not os.path.isfile(CONFIG_FILE_PATH):
+        raise Exception("I need a config file called octopus_sensing_visualizer_config.conf")
+
+    # Load the configuration file
+    config = configparser.RawConfigParser(allow_no_value=True)
+    config.read(CONFIG_FILE_PATH)
+
+    port = 8080
+    if config.has_option('SERVER', 'port'):
+        port = int(config.get('SERVER', 'port'))
 
     cherrypy.tree.mount(RootHandler(), '/', config={
         '/': {
@@ -29,12 +42,11 @@ def main():
             'tools.staticdir.index': 'index.html',
         },
     })
-    end_point = EndPoint("./octopus_sensing_visualizer_config.conf")
+    end_point = EndPoint(config)
     cherrypy.tree.mount(end_point, '/api')
 
     cherrypy.server.socket_host = '0.0.0.0'
-    # TODO: Make it a config or a command line parameter
-    cherrypy.server.socket_port = 9980
+    cherrypy.server.socket_port = port
     cherrypy.engine.autoreload.on = False
     cherrypy.engine.start()
     cherrypy.engine.block()
